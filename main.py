@@ -5,8 +5,15 @@ import os
 app = Flask(__name__)
 
 API_URL = "https://router.huggingface.co/hf-inference/v1/chat/completions"
-API_KEY = os.getenv("HF_API_KEY")   # ❗ API key is NOT written here
+API_KEY = os.getenv("HF_API_KEY")  # HuggingFace API key environment variable
 
+# Home Route (Important)
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"status": "success", "message": "Mays AI is running!"})
+
+
+# Chat Route
 @app.route("/chat", methods=["POST"])
 def chat():
     user_msg = request.json.get("message")
@@ -26,5 +33,6 @@ def chat():
     response = requests.post(API_URL, headers=headers, json=data)
     return jsonify(response.json())
 
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
